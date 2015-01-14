@@ -39,7 +39,7 @@ class RemoteField(object):
         try:
             remote_widget_class = getattr(widgets, remote_widget_class_name)
             remote_widget = remote_widget_class(self.field.widget, field_name=self.field_name)
-        except Exception, e:
+        except Exception as e:
             logger.warning('Error serializing %s: %s', remote_widget_class_name, str(e))
             widget_dict = {}
         else:
@@ -228,7 +228,7 @@ class RemoteComboField(RemoteField):
     def as_dict(self):
         field_dict = super(RemoteComboField, self).as_dict()
 
-        field_dict.update(fields=self.field.fields)
+        field_dict.update(dict(fields=self.field.fields))
 
         return field_dict
 
