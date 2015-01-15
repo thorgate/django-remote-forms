@@ -177,10 +177,17 @@ class RemoteChoiceField(RemoteField):
 
         field_dict['choices'] = []
         for key, value in self.field.choices:
-            field_dict['choices'].append({
+            choice_data = {
                 'value': key,
-                'display': value
-            })
+            }
+
+            if isinstance(value, dict):
+                choice_data.update(value)
+
+            else:
+                choice_data['display'] = value
+
+            field_dict['choices'].append(choice_data)
 
         return field_dict
 
