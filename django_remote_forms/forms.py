@@ -1,3 +1,4 @@
+from django.forms import ModelForm
 from django.utils.datastructures import SortedDict
 
 from django_remote_forms import fields, logger
@@ -14,6 +15,11 @@ class RemoteForm(object):
         self.included_fields = set(kwargs.pop('include', []))
         self.readonly_fields = set(kwargs.pop('readonly', []))
         self.ordered_fields = kwargs.pop('ordering', [])
+
+        if isinstance(form, ModelForm):
+            if hasattr(form, '_meta'):
+                self.included_fields = self.included_fields or set(getattr(form._meta, 'fields') or [])
+                self.excluded_fields = self.excluded_fields or set(getattr(form._meta, 'exclude') or [])
 
         self.fieldsets = kwargs.pop('fieldsets', {})
 
@@ -198,6 +204,9 @@ class RemoteForm(object):
 
             res['name'] = instance.fields[0]
             res['attrs'] = instance.attrs
+
+        elif isinstance(instance, dict):
+            res.update(instance)
 
         elif not isinstance(instance, Layout):
             raise NotImplementedError('Unknown layout object %s: %s' % (instance.__class__.__name__, instance))
