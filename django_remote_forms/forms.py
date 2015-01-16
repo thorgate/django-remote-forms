@@ -202,7 +202,7 @@ class RemoteForm(object):
         elif not isinstance(instance, Layout):
             raise NotImplementedError('Unknown layout object %s: %s' % (instance.__class__.__name__, instance))
 
-        res['attrs'] = self.keys_case(res['attrs'] or {})
+        res['attrs'] = self.keys_case(res.get('attrs', {}))
 
         return res
 
