@@ -202,7 +202,17 @@ class RemoteForm(object):
         elif not isinstance(instance, Layout):
             raise NotImplementedError('Unknown layout object %s: %s' % (instance.__class__.__name__, instance))
 
+        res['attrs'] = self.keys_case(res['attrs'] or {})
+
         return res
+
+    def keys_case(self, attrs):
+        new_attrs = {}
+
+        for key, val in attrs.items():
+            new_attrs[key.replace('-', '_')] = val
+
+        return new_attrs
 
     def parse_flat_attrs(self, attrs):
         import xml.etree.ElementTree as ET
