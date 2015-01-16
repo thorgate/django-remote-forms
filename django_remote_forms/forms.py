@@ -190,7 +190,7 @@ class RemoteForm(object):
 
         if isinstance(instance, Div):
             res['css_class'] = instance.css_class
-            res['attrs'] = instance.flat_attrs
+            res['attrs'] = self.parse_flat_attrs(instance.flat_attrs)
 
         elif isinstance(instance, Field):
             if len(instance.fields) > 1:
@@ -208,3 +208,9 @@ class RemoteForm(object):
             raise NotImplementedError('Unknown layout object %s: %s' % (instance.__class__.__name__, instance))
 
         return res
+
+    def parse_flat_attrs(self, attrs):
+        import xml.etree.ElementTree as ET
+
+        tree = ET.fromstring('<element %s />' % attrs)
+        return tree.attrib
