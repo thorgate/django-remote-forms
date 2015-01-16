@@ -112,6 +112,20 @@ class RemoteForm(object):
         # If there are no fieldsets, specify order
         form_dict['ordered_fields'] = self.fields
 
+        try:
+            from crispy_forms.helper import FormHelper
+            from crispy_forms.layout import Layout
+
+            if hasattr(self.form, 'helper'):
+                if isinstance(self.form.helper, FormHelper):
+                    if self.form.helper.layout is not None:
+
+                        if isinstance(self.form.helper.layout, Layout):
+                            form_dict['layout'] = self.parse_layout(self.form.helper.layout)
+
+        except ImportError:
+            pass
+
         initial_data = {}
 
         for name, field in [(x, self.form.fields[x]) for x in self.fields]:
@@ -153,3 +167,44 @@ class RemoteForm(object):
             form_dict['data'] = initial_data
 
         return resolve_promise(form_dict)
+
+    def parse_layout(self, item):
+        obj = {
+            'children': [],
+        }
+        obj.update(self.parse_layout_class(item))
+
+        if hasattr(item, 'fields') and obj['type'] != 'field':
+            for i, layout_object in enumerate(item.fields):
+                obj['children'].append(self.parse_layout(layout_object))
+
+        return obj
+
+    def parse_layout_class(self, instance):
+        from django.utils.text import slugify
+        from crispy_forms.layout import Layout, Div, Field
+
+        res = {
+            'type': slugify(instance.__class__.__name__),
+        }
+
+        if isinstance(instance, Div):
+            res['css_class'] = instance.css_class
+            res['attrs'] = instance.flat_attrs
+
+        elif isinstance(instance, Field):
+            if len(instance.fields) > 1:
+                raise NotImplementedError('We only support 1 field at a time in Field object')
+
+            res['name'] = instance.fields[0]
+
+            res['css_class'] = instance.attrs.get('class', None)
+            res['attrs'] = instance.attrs
+
+            if 'class' in res['attrs']:
+                del res['attrs']['class']
+
+        elif not isinstance(instance, Layout):
+            raise NotImplementedError('Unknown layout object %s: %s' % (instance.__class__.__name__, instance))
+
+        return res
