@@ -189,20 +189,15 @@ class RemoteForm(object):
         }
 
         if isinstance(instance, Div):
-            res['css_class'] = instance.css_class
             res['attrs'] = self.parse_flat_attrs(instance.flat_attrs)
+            res['attrs']['class'] = instance.css_class
 
         elif isinstance(instance, Field):
             if len(instance.fields) > 1:
                 raise NotImplementedError('We only support 1 field at a time in Field object')
 
             res['name'] = instance.fields[0]
-
-            res['css_class'] = instance.attrs.get('class', None)
             res['attrs'] = instance.attrs
-
-            if 'class' in res['attrs']:
-                del res['attrs']['class']
 
         elif not isinstance(instance, Layout):
             raise NotImplementedError('Unknown layout object %s: %s' % (instance.__class__.__name__, instance))
