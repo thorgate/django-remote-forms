@@ -79,7 +79,7 @@ class RemoteMultipleHiddenInput(RemoteHiddenInput):
     def as_dict(self):
         widget_dict = super(RemoteMultipleHiddenInput, self).as_dict()
 
-        widget_dict['choices'] = self.widget.choices
+        widget_dict['choices'] = []
 
         return widget_dict
 
@@ -199,7 +199,7 @@ class RemoteRadioFieldRenderer(RemoteWidget):
         widget_dict['name'] = self.widget.name
         widget_dict['value'] = self.widget.value
         widget_dict['attrs'] = self.widget.attrs
-        widget_dict['choices'] = self.widget.choices
+        widget_dict['choices'] = []
         widget_dict['input_type'] = 'radio'
 
         return widget_dict
