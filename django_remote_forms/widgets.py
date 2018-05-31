@@ -123,18 +123,7 @@ class RemoteDateInput(RemoteTimeInput):
         widget_dict = super(RemoteDateInput, self).as_dict()
 
         widget_dict['input_type'] = 'date'
-
-        current_year = datetime.datetime.now().year
-        widget_dict['choices'] = [{
-            'title': 'day',
-            'data': [{'key': x, 'value': x} for x in range(1, 32)]
-        }, {
-            'title': 'month',
-            'data': [{'key': x, 'value': y} for (x, y) in MONTHS.items()]
-        }, {
-            'title': 'year',
-            'data': [{'key': x, 'value': x} for x in range(current_year - 100, current_year + 1)]
-        }]
+        widget_dict['choices'] = []
 
         return widget_dict
 
@@ -168,12 +157,6 @@ class RemoteSelect(RemoteWidget):
         widget_dict = super(RemoteSelect, self).as_dict()
 
         widget_dict['choices'] = []
-        for key, value in self.widget.choices:
-            widget_dict['choices'].append({
-                'value': key,
-                'display': value
-            })
-
         widget_dict['input_type'] = 'select'
 
         return widget_dict
@@ -227,13 +210,6 @@ class RemoteRadioSelect(RemoteSelect):
         widget_dict = super(RemoteRadioSelect, self).as_dict()
 
         widget_dict['choices'] = []
-        for key, value in self.widget.choices:
-            widget_dict['choices'].append({
-                'name': self.field_name or '',
-                'value': key,
-                'display': value
-            })
-
         widget_dict['input_type'] = 'radio'
 
         return widget_dict
