@@ -1,7 +1,8 @@
 import datetime
 
+from collections import OrderedDict
+
 from django.utils.dates import MONTHS
-from django.utils.datastructures import SortedDict
 
 
 class RemoteWidget(object):
@@ -10,7 +11,7 @@ class RemoteWidget(object):
         self.widget = widget
 
     def as_dict(self):
-        widget_dict = SortedDict()
+        widget_dict = OrderedDict()
         widget_dict['title'] = self.widget.__class__.__name__
         widget_dict['is_hidden'] = self.widget.is_hidden
         widget_dict['needs_multipart_form'] = self.widget.needs_multipart_form
@@ -179,7 +180,7 @@ class RemoteSelectMultiple(RemoteSelect):
 
 class RemoteRadioInput(RemoteWidget):
     def as_dict(self):
-        widget_dict = SortedDict()
+        widget_dict = OrderedDict()
         widget_dict['title'] = self.widget.__class__.__name__
         widget_dict['name'] = self.widget.name
         widget_dict['value'] = self.widget.value
@@ -194,7 +195,7 @@ class RemoteRadioInput(RemoteWidget):
 
 class RemoteRadioFieldRenderer(RemoteWidget):
     def as_dict(self):
-        widget_dict = SortedDict()
+        widget_dict = OrderedDict()
         widget_dict['title'] = self.widget.__class__.__name__
         widget_dict['name'] = self.widget.name
         widget_dict['value'] = self.widget.value
