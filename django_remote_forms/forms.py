@@ -1,5 +1,6 @@
+from collections import OrderedDict
+
 from django.forms import ModelForm
-from django.utils.datastructures import SortedDict
 
 from django_remote_forms import fields, logger
 from django_remote_forms.utils import resolve_promise
@@ -105,13 +106,13 @@ class RemoteForm(object):
             }
         }
         """
-        form_dict = SortedDict()
+        form_dict = OrderedDict()
         form_dict['title'] = self.form.__class__.__name__
         form_dict['non_field_errors'] = self.form.non_field_errors()
         form_dict['label_suffix'] = self.form.label_suffix
         form_dict['is_bound'] = self.form.is_bound
         form_dict['prefix'] = self.form.prefix
-        form_dict['fields'] = SortedDict()
+        form_dict['fields'] = OrderedDict()
         form_dict['errors'] = self.form.errors
         form_dict['fieldsets'] = getattr(self.form, 'fieldsets', [])
 
