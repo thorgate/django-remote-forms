@@ -5,6 +5,11 @@ from collections import OrderedDict
 
 from django_remote_forms import logger, widgets
 
+try:
+    from django.forms.models import ModelChoiceIteratorValue
+except ImportError:
+    ModelChoiceIteratorValue = None
+
 
 class RemoteField(object):
     """
@@ -177,6 +182,9 @@ class RemoteChoiceField(RemoteField):
 
         field_dict['choices'] = []
         for key, value in self.field.choices:
+            if ModelChoiceIteratorValue is not None and isinstance(key, ModelChoiceIteratorValue):
+                key = key.value
+            
             choice_data = {
                 'value': key,
             }
